@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Get started with the Isochrone API</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <!-- Import Mapbox GL JS  -->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+  <!-- Import Assembly -->
+  <link href='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css' rel='stylesheet'>
+  <script src='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.js'> </script>
+  <!-- Import jQuery -->
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/graphhopper-js-api-client/dist/graphhopper-client.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+	<!--circle-->
+  <script src='https://npmcdn.com/mapbox-gl-circle/dist/mapbox-gl-circle.min.js'></script>
+
+
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+	  box-sizing: border-box;
+    }
+	.container{
+	display:flex;
+	width:100%;
+	height: 95vh;
+	}
+	nav{
+		height: 5vh;
+		display:flex;
+		justify-content: space-around;
+		align-items: center;
+		background:#314CCD;
+		color:white;
+	}
+    #map {
+      height: 100%;
+     width:75%;
+    }
+	#formulaire{
+background: rgba(255, 255, 255, 0.616);
+display:flex;
+flex-direction: column;
+height: 150px;
+justify-content: space-around;
+align-items:center;
+padding: 16px;
+    border-bottom: 2px solid  #bed718;
+	}
+	.form-container{
+		width: 25%;
+		height:95vh;
+		padding: 16px;
+		overflow: scroll;
+    	border: 5px solid #bed718;
+	}
+
+
+	#formulaire div i {
+		margin-right: 8px;
+	}
+	.h1{
+		font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+		font-size: 45px;
+		display:block;
+		margin-top:32px;
+		margin-bottom: 32px;
+		height:50px;
+		text-align:center;
+	}
+	#instruction{
+		margin-top:16px;
+		padding:8px;
+	}
+	#instruction li {
+		margin-top:8px;
+	}
+  </style>
+</head>
+
+<body>
+
+	<!-- Create a container for the map -->
+<nav><a href="">Accueil</a><a href="">à propos</a></nav>
+	<div class="container">
+
+  <div id='map'></div>
+  <div class="form-container">
+	<h1 class="h1">5 Km à pied</h1>
+  <form action="" id="formulaire" method="post">
+	  
+		<div><i class="fas fa-map-marker-alt"></i><input type="text" name="adresse" id="adresse"></div>
+		
+		<div><input type="submit" value="Calculer"onclick="geocode()"></div>
+	  
+  </form>
+
+  <ul id="instruction">
+
+  </ul>
+</div>
+</div>
+</body>
+
+<script>
+//16.246064, -61.179842   16.29197538624958, -61.41705956910533
+
+	var lon =3.06667;
+	var lat =50.633331;
+	
+	//var lon=2.1896612210853723;
+	//var lat=50.32776747491813;
+	
+	
+	// Add your Mapbox access token
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZWxrcmFuayIsImEiOiJja2xtb2swcWMwMTlpMndxbWlqdWYyaTc1In0.yJEFoYcVbJ6C66joUDP4-g';
+    
+	//Bounds ne sert à rien : limite d'affichage mais pas limite géographique...
+	
+	var map = new mapboxgl.Map({
+      container: 'map', // Specify the container ID
+      style: 'mapbox://styles/mapbox/streets-v11', // Specify which map style to use
+      center: [lon, lat], // Specify the starting position
+      zoom: 15, // Specify the starting zoom
+    });
+	
+	var marker = new mapboxgl.Marker({
+      'color': '#314ccd'
+    });
+
+    // Create a LngLat object to use in the marker initialization
+    // https://docs.mapbox.com/mapbox-gl-js/api/#lnglat
+    var lngLat = {
+      lon: lon,
+      lat: lat
+    };
+	
+	var tabCoordonnees = [];
+	var defaultKey = "6d332a7e-45c5-4377-90de-cd9665ae1540";
+	var userInput = document.getElementById("adresse").value;
+
+  function geocode(){
+	var userInput = document.getElementById("adresse").value;
+	var url="https://graphhopper.com/api/1/geocode?q="+userInput+"&locale=de&debug=true&key="+defaultKey;
+	console.log(url);
+	}
+ // If you only need e.g. Routing, you can only require the needed parts
+ //var GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting');
+ //var GHInput = require('graphhopper-js-api-client/src/GHInput');
+	window.onload = function() {
+		
+		//Pour bloquer les routes qui correspondent au périmètre du cercle
+		var tabCoordPoints = [];
+		var tabBlockArea = [];
+		var myCircle;
+		myCircle = new MapboxCircle({lat: lat, lng: lon}, 1000, {
+				editable: true,
+				minRadius: 1000,
+				maxRadius:	1000,
+				fillColor: '#29AB87'
+			}).addTo(map);
+			/*lat:3.0539931229686332,
+				long:50.6292291566594,
+				radius:500*/
+
+		
+			//Récupérer les coordonnées des points du périmètre du cercle
+			tabCoordPoints=myCircle._circle.geometry.coordinates[0];
+			
+			//Les mettre dans un tableau pour créer des block area
+			for(var i=0; i<tabCoordPoints.length; i++){
+				var longitude = tabCoordPoints[i][0];
+				var latitude = tabCoordPoints[i][1];
+				tabBlockArea.push([latitude, longitude]);
+			}
+		map.on('load', function() {
+				
+			
+			
+			
+			
+			// Initialize the marker at the query coordinates
+			marker.setLngLat(lngLat).addTo(map);
+		  
+			//L'affichage de la route
+			map.addSource('route', {
+				'type': 'geojson',
+				'data': {
+					'type': 'Feature',
+					'properties': {},
+					'geometry': {
+						'type': 'LineString',
+						'coordinates': tabCoordonnees
+					}
+				}
+			});
+			map.addLayer({
+				'id': 'route',
+				'type': 'line',
+				'source': 'route',
+				'layout': {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				'paint': {
+					'line-color': 'green',
+					'line-width': 5
+				}
+			});
+			
+			
+		});
+		console.log(tabBlockArea);
+		var block_query =""
+		var profile = "foot";
+		
+			for(var i = 0; i< tabBlockArea.length;i++){
+		
+				block_query +=tabBlockArea[i][0];
+				block_query += ","
+				block_query+= tabBlockArea[i][1],
+				block_query+=",";
+				block_query+="50";
+				
+				block_query += ";"
+		
+		}
+		console.log("block_query "+block_query);
+	
+
+
+		var host;
+		var ghRouting = new GraphHopper.Routing({
+			
+			key: defaultKey, 
+			host: host, 
+			vehicle: profile, 
+			elevation: false, 
+			locale: "fr",
+			ch:{
+				disable: true,
+			}, 
+			debug:true,
+			//block_area :block_query,
+			point:[
+				[lat+","+lon],
+				[lat+","+(lon-0.005)],
+				[(lat+0.0075)+","+(lon-0.005)],
+				[(lat+0.0075)+","+(lon+0.005)],
+				[(lat)+","+(lon+0.005)],
+				[lat+","+lon]
+				]
+		//Boucle de 4 kilomètres :
+        //Point de départ
+        //long-0,005
+        //lat+0,0075
+        //lon+0,01
+        //lat-0,0075
+        //Point de départ
+		//Boucle de 1 kilomètre :
+        //lat, lon
+        //lat, lon-0,001
+        //lat+0,0025, lon-0,001
+        //lat+0,0025, lon+0,002
+        //lat, lon+0,002
+        //lat, lon
+
+        //Boucle de 2 kilomètre :
+        //lat, lon
+        //lat, lon-0,0025
+        //lat+0,004, lon-0,0025
+        //lat+0,004, lon+0,005
+        //lat, lon+0,005
+        //lat, lon
+
+        //Boucle de 3 kilomètre :
+        //lat, lon
+        //lat, lon-0,00375
+        //lat+0,0055, lon-0,00375
+        //lat+0,0055, lon+0,0075
+        //lat, lon+0,0075
+        //lat, lon
+		});
+		
+		console.log("POINT :"+ghRouting.point);
+	
+		console.log(ghRouting.block_area);
+		
+//console.log("blocked-area : "+blocked_area);
+//console.log("block : "+ghRouting.block_area);
+
+//console.log(" block area : "+ghRouting.block_area);
+//console.log(" algo : "+ghRouting.algorithm);
+		
+		 // If you only need e.g. Routing, you can only require the needed parts
+		 //var ghRouting = new GraphHopperRouting({key: defaultKey, host: host, vehicle: profile, elevation: false});
+	 
+		 // Setup your own Points
+		ghRouting.addPoint(new GHInput(lat, lon), new GHInput(50.6238143, 3.049731), new GHInput(50.6253143, 3.049731), new GHInput(50.6253143, 3.051231), new GHInput(50.6238143, 3.051231), new GHInput(50.6238143, 3.049731));
+		
+		ghRouting.doRequest()
+		.then(function(json){
+			// Add your own result handling here
+			
+			for(var i=0; i<json.paths[0].points.coordinates.length; i++){
+				tabCoordonnees.push(json.paths[0].points.coordinates[i]);
+			}
+			console.log(json);
+		
+			for(var i=0; i<json.paths[0].instructions.length; i++){
+				
+				var instruction = document.getElementById("instruction");
+				var instruction_element = document.createElement('li');
+				//json.paths[0].points.instruction[i].text;
+				instruction_element.innerText =[i]+"--"+ json.paths[0].instructions[i].text;
+				instruction.appendChild(instruction_element);
+			
+			}
+		})
+		.catch(function(err){
+			console.error(err.message);
+		});
+		
+		
+console.log(tabBlockArea[0][0]);
+	}
+	
+	
+	
+/*
+	function setupGeocodingAPI(map, ghGeocoding) {
+    //  Find address    
+    map.setView([51.505, -0.09], 13);
+    var iconObject = L.icon({
+        iconUrl: './img/marker-icon.png',
+        shadowSize: [50, 64],
+        shadowAnchor: [4, 62],
+        iconAnchor: [12, 40]
+    });
+    var geocodingLayer = L.geoJson().addTo(map);
+    geocodingLayer.options = {
+        style: {color: "#00cc33", "weight": 5, "opacity": 0.6}
+    };
+
+    L.NumberedDivIcon = L.Icon.extend({
+        options: {
+            iconUrl: './img/marker-icon.png',
+            iconSize: new L.Point(25, 41),
+            iconAnchor: new L.Point(13, 41),
+            popupAnchor: new L.Point(0, -33),
+            className: 'leaflet-div-icon'
+        },
+        createIcon: function () {
+            var div = document.createElement('div');
+            var img = this._createImg(this.options['iconUrl']);
+            var numdiv = document.createElement('div');
+            numdiv.setAttribute("class", "number");
+            numdiv.innerHTML = this.options['number'] || '';
+            div.appendChild(img);
+            div.appendChild(numdiv);
+            this._setIconStyles(div, 'icon');
+            return div;
+        }
+    });
+
+    var clearGeocoding = function () {
+        $("#geocoding-results").empty();
+        $("#geocoding-error").empty();
+        $("#geocoding-response").empty();
+        geocodingLayer.clearLayers();
+    };
+
+    var mysubmit = function () {
+        clearGeocoding();
+
+        ghGeocoding.doRequest({query: textField.val()})
+            .then(function (json) {
+                var listUL = $("<ol>");
+                $("#geocoding-response").append("Locale:" + ghGeocoding.locale + "<br/>").append(listUL);
+                var minLon, minLat, maxLon, maxLat;
+                var counter = 0;
+                for (var hitIdx in json.hits) {
+                    counter++;
+                    var hit = json.hits[hitIdx];
+
+                    var str = counter + ". " + dataToText(hit);
+                    $("<div>" + str + "</div>").appendTo(listUL);
+                    new L.Marker(hit.point, {
+                        icon: new L.NumberedDivIcon({iconUrl: './img/marker-icon-green.png', number: '' + counter})
+                    }).bindPopup("<div>" + str + "</div>").addTo(geocodingLayer);
+
+                    if (!minLat || minLat > hit.point.lat)
+                        minLat = hit.point.lat;
+                    if (!minLon || minLon > hit.point.lng)
+                        minLon = hit.point.lng;
+
+                    if (!maxLat || maxLat < hit.point.lat)
+                        maxLat = hit.point.lat;
+                    if (!maxLon || maxLon < hit.point.lng)
+                        maxLon = hit.point.lng;
+                }
+
+                if (minLat) {
+                    var tmpB = new L.LatLngBounds(new L.LatLng(minLat, minLon), new L.LatLng(maxLat, maxLon));
+                    map.fitBounds(tmpB);
+                }
+            })
+            .catch(function (err) {
+                $("#geocoding-error").text("An error occured: " + err.message);
+            });
+    };*/
+	
+	/*
+	tabcoordPoint;
+	var tabBlockArea[];
+	for(var i=0; i<tabcoordPoint.length; i++){
+		var lon = tabcoordPoint[i][0];
+		var lat = tabcoordPoint[i][1];
+		tabBlockArea.push([lat, lon]);
+	}
+	DANS L'OBJET OU ON DEFINIT LES BLOCK AREA :
+	for(var i=0; i<tabBlockArea.length; i++){
+		block_area:{
+			lat: tabBlockArea[i][0],
+			lon : tabBlockArea[i][1],
+			radius:50
+		},
+	}
+	*/
+	
+</script>
+</html>
