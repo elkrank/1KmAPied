@@ -1,16 +1,9 @@
-//16.246064, -61.179842   16.29197538624958, -61.41705956910533
-
 var lon =3.06667;
 var lat =50.633331;
-
-//var lon=2.1896612210853723;
-//var lat=50.32776747491813;
-
 
 // Add your Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxrcmFuayIsImEiOiJja2xtb2swcWMwMTlpMndxbWlqdWYyaTc1In0.yJEFoYcVbJ6C66joUDP4-g';
 
-//Bounds ne sert à rien : limite d'affichage mais pas limite géographique...
 
 var map = new mapboxgl.Map({
   container: 'map', // Specify the container ID
@@ -54,25 +47,17 @@ window.onload = function() {
             maxRadius:	1000,
             fillColor: '#29AB87'
         }).addTo(map);
-        /*lat:3.0539931229686332,
-            long:50.6292291566594,
-            radius:500*/
 
-    
         //Récupérer les coordonnées des points du périmètre du cercle
-        tabCoordPoints=myCircle._circle.geometry.coordinates[0];
+    tabCoordPoints=myCircle._circle.geometry.coordinates[0];
         
         //Les mettre dans un tableau pour créer des block area
-        for(var i=0; i<tabCoordPoints.length; i++){
-            var longitude = tabCoordPoints[i][0];
-            var latitude = tabCoordPoints[i][1];
-            tabBlockArea.push([latitude, longitude]);
+    for(var i=0; i<tabCoordPoints.length; i++){
+        var longitude = tabCoordPoints[i][0];
+        var latitude = tabCoordPoints[i][1];
+        tabBlockArea.push([latitude, longitude]);
         }
     map.on('load', function() {
-            
-        
-        
-        
         
         // Initialize the marker at the query coordinates
         marker.setLngLat(lngLat).addTo(map);
@@ -110,19 +95,14 @@ window.onload = function() {
     var profile = "foot";
     
         for(var i = 0; i< tabBlockArea.length;i++){
-    
             block_query +=tabBlockArea[i][0];
             block_query += ","
             block_query+= tabBlockArea[i][1],
             block_query+=",";
             block_query+="50";
-            
             block_query += ";"
-    
     }
     console.log("block_query "+block_query);
-
-
 
     var host;
     var ghRouting = new GraphHopper.Routing({
@@ -145,41 +125,12 @@ window.onload = function() {
             [(lat)+","+(lon+0.0025)],
             [lat+","+lon]
             ]
-         //Boucle de 2 kilomètre :
-		//lat, lon
-		//lat, lon-0,0025
-		//lat+0,004, lon-0,0025
-		//lat+0,004, lon+0,005
-		//lat, lon+0,005
-		//lat, lon
-
-    //Boucle de 2 kilomètre :
-    //lat, lon
-    //lat, lon-0,0025
-    //lat+0,004, lon-0,0025
-    //lat+0,004, lon+0,005
-    //lat, lon+0,005
-    //lat, lon
-
-    //Boucle de 3 kilomètre :
-    //lat, lon
-    //lat, lon-0,00375
-    //lat+0,0055, lon-0,00375
-    //lat+0,0055, lon+0,0075
-    //lat, lon+0,0075
-    //lat, lon
+         
     });
     
     console.log("POINT :"+ghRouting.point);
 
     console.log(ghRouting.block_area);
-    
-//console.log("blocked-area : "+blocked_area);
-//console.log("block : "+ghRouting.block_area);
-
-//console.log(" block area : "+ghRouting.block_area);
-//console.log(" algo : "+ghRouting.algorithm);
-    
      // If you only need e.g. Routing, you can only require the needed parts
      //var ghRouting = new GraphHopperRouting({key: defaultKey, host: host, vehicle: profile, elevation: false});
  
