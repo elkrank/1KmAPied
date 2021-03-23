@@ -141,47 +141,18 @@ window.onload = function() {
             [lat+","+lon],
             [lat+","+(lon-0.00375)],
             [(lat+0.0055)+","+(lon-0.00375)],
-            [(lat+0.0055)+","+(lon+0.0075)],
-            [(lat)+","+(lon+0.0075)],
+            [(lat+0.0055)+","+(lon+0,00375)],
+            [(lat)+","+(lon+0,00375)],
             [lat+","+lon]
             ]
-            //Boucle de 3 kilomètre :
+            	//Boucle de 3 kilomètre :
+		//Vers le haut
 		//lat, lon
 		//lat, lon-0,00375
 		//lat+0,0055, lon-0,00375
-		//lat+0,0055, lon+0,0075
-		//lat, lon+0,0075
+		//lat+0,0055, lon+0,00375
+		//lat, lon+0,00375
 		//lat, lon
-    //Boucle de 4 kilomètres :
-    //Point de départ
-    //long-0,005
-    //lat+0,0075
-    //lon+0,01
-    //lat-0,0075
-    //Point de départ
-    //Boucle de 1 kilomètre :
-    //lat, lon
-    //lat, lon-0,001
-    //lat+0,0025, lon-0,001
-    //lat+0,0025, lon+0,002
-    //lat, lon+0,002
-    //lat, lon
-
-    //Boucle de 2 kilomètre :
-    //lat, lon
-    //lat, lon-0,0025
-    //lat+0,004, lon-0,0025
-    //lat+0,004, lon+0,005
-    //lat, lon+0,005
-    //lat, lon
-
-    //Boucle de 3 kilomètre :
-    //lat, lon
-    //lat, lon-0,00375
-    //lat+0,0055, lon-0,00375
-    //lat+0,0055, lon+0,0075
-    //lat, lon+0,0075
-    //lat, lon
     });
     
     console.log("POINT :"+ghRouting.point);
