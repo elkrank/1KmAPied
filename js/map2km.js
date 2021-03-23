@@ -141,8 +141,8 @@ window.onload = function() {
             [lat+","+lon],
             [lat+","+(lon-0.0025)],
             [(lat+0.004)+","+(lon-0.0025)],
-            [(lat+0.004)+","+(lon+0.005)],
-            [(lat)+","+(lon+0.005)],
+            [(lat+0.004)+","+(lon+0.0025)],
+            [(lat)+","+(lon+0.0025)],
             [lat+","+lon]
             ]
          //Boucle de 2 kilomètre :
