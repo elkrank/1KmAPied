@@ -12,6 +12,7 @@ body {
       height: 5vh;
       display:flex;
       justify-content: space-around;
+   
       align-items: center;
       background:#314CCD;
       color:white;
@@ -28,7 +29,7 @@ height: 150px;
 justify-content: space-around;
 align-items:center;
 padding: 16px;
-  border-bottom: 2px solid  #bed718;
+ 
   }
   .form-container{
       width: 25%;
@@ -57,4 +58,12 @@ padding: 16px;
   }
   #instruction li {
       margin-top:8px;
+  }
+  .choix a {
+    padding : 16px;
+   
+  }
+  .choix a:hover{
+      color: #314CCD;
+      background:#bed718;
   }
