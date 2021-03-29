@@ -1,6 +1,7 @@
-var lon =3.06667;
-var lat =50.633331;
+var storageCoord = localStorage;
 
+var lon = Number(storageCoord.getItem('lon'));
+var lat = Number(storageCoord.getItem('lat'));
 // Add your Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxrcmFuayIsImEiOiJja2xtb2swcWMwMTlpMndxbWlqdWYyaTc1In0.yJEFoYcVbJ6C66joUDP4-g';
 
