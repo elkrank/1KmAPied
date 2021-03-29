@@ -23,9 +23,32 @@
 </body>
 <script>
     //  recuperre l'adresse   stockage dans q
-    // le do request
-    // retour json
-    // recupere les coordoné
-    // stocker les coordonnée dans le local storage
+	//clé API graphhopper geocoding
+	var defaultKey = "6d332a7e-45c5-4377-90de-cd9665ae1540";
+	function geocode(){
+		storageCoord = localStorage;
+		storageCoord.clear();
+		
+		var adresse = document.getElementById("adress").value; //récupère l'adresse du formulaire
+		//Url de la requête
+		var url="https://graphhopper.com/api/1/geocode?q="+adresse+"&locale=fr&debug=true&provider=opencagedata&key="+defaultKey;
+
+		//Récupérer json depuis l'url de la requête.
+		function Get(url){
+			var Httpreq = new XMLHttpRequest(); // a new request
+			Httpreq.open("GET",url,false);
+			Httpreq.send(null);
+			return Httpreq.responseText;          
+		}
+		var json_obj = JSON.parse(Get(url));
+		
+		//Récupérer coordonnées depuis le json.
+		var lat = json_obj.hits[0].point.lat;
+		var lon = json_obj.hits[0].point.lng;
+		
+		
+		storageCoord.setItem('lat', lat);
+		storageCoord.setItem('lon', lon);
+	}
 </script>
 </html>
