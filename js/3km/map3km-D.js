@@ -27,7 +27,7 @@ var lngLat = {
 
 //Tableau de coordonnées pour générer les instructions
 var tabCoordonnees = [];
-var defaultKey = "9abef042-bba4-4ca2-8ca7-071d2e0185c7";
+//var defaultKey = "9abef042-bba4-4ca2-8ca7-071d2e0185c7";
 var userInput = document.getElementById("adresse").value;
 
 function geocode(){
