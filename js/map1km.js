@@ -22,7 +22,7 @@ var lngLat = {
 };
 
 var tabCoordonnees = [];
-var defaultKey = "6d332a7e-45c5-4377-90de-cd9665ae1540";
+
 
 
 window.onload = function() {
