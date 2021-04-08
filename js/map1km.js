@@ -23,13 +23,7 @@ var lngLat = {
 
 var tabCoordonnees = [];
 var defaultKey = "6d332a7e-45c5-4377-90de-cd9665ae1540";
-var userInput = document.getElementById("adresse").value;
 
-function geocode(){
-var userInput = document.getElementById("adresse").value;
-var url="https://graphhopper.com/api/1/geocode?q="+userInput+"&locale=de&debug=true&key="+defaultKey;
-console.log(url);
-}
 
 window.onload = function() {
     //Pour bloquer les routes qui correspondent au périmètre du cercle
