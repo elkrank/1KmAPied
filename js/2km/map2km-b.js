@@ -12,6 +12,7 @@ var map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/streets-v11', // Specify which map style to use
   center: [lon, lat], // Specify the starting position
   zoom: 15, // Specify the starting zoom
+  preserveDrawingBuffer: true
 });
 
 var marker = new mapboxgl.Marker({
