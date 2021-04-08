@@ -25,14 +25,7 @@ var lngLat = {
 };
 
 var tabCoordonnees = [];
-//var defaultKey = "9abef042-bba4-4ca2-8ca7-071d2e0185c7";
-var userInput = document.getElementById("adresse").value;
 
-function geocode(){
-var userInput = document.getElementById("adresse").value;
-var url="https://graphhopper.com/api/1/geocode?q="+userInput+"&locale=de&debug=true&key="+defaultKey;
-console.log(url);
-}
 // If you only need e.g. Routing, you can only require the needed parts
 //var GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting');
 //var GHInput = require('graphhopper-js-api-client/src/GHInput');
