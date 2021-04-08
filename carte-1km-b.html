@@ -2,64 +2,59 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
-  <title>1km à pied</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <!-- Import Mapbox GL JS  -->
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-  <script src="js/defautkey.js"></script>
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
-  <!-- Import Assembly -->
-  <link href='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css' rel='stylesheet'>
-  <script src='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.js'> </script>
-  <!-- Import jQuery -->
-  <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-  <script src="https://cdn.jsdelivr.net/npm/graphhopper-js-api-client/dist/graphhopper-client.js"></script>
-  <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+	<meta charset='utf-8' />
+	<title>1km à pied</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<!-- Import Mapbox GL JS  -->
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<script src="js/defautkey.js"></script>
+	<script src="js/html2pdf.js"></script>
+	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+	<!-- Import Assembly -->
+	<link href='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css' rel='stylesheet'>
+	<script src='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.js'> </script>
+	<!-- Import jQuery -->
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+	<script src="https://cdn.jsdelivr.net/npm/graphhopper-js-api-client/dist/graphhopper-client.js"></script>
+	<script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+	<link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
 	<!--circle-->
-  <script src='https://npmcdn.com/mapbox-gl-circle/dist/mapbox-gl-circle.min.js'></script>
-  <link rel="stylesheet" href="css/style.css">
+	<script src='https://npmcdn.com/mapbox-gl-circle/dist/mapbox-gl-circle.min.js'></script>
+	<link rel="stylesheet" href="css/style.css">
   
 
 </head>
 <body>
 
-    <nav>
-        <a href="index.html">Accueil</a>
-        <a href="">à propos</a>
-        <a href="carte-1km.html">1km</a>
-        <a href="carte-2km.html">2km</a>
-        <a href="carte-3km.html">3km</a>
-        <a href="carte-4km.html">4km</a>
-    </nav>
+	<nav>
+		<a href="index.html">Accueil</a>
+		<a href="">à propos</a>
+		<a href="carte-1km.html">1km</a>
+		<a href="carte-2km.html">2km</a>
+		<a href="carte-3km.html">3km</a>
+		<a href="carte-4km.html">4km</a>
+	</nav>
 	<div class="container">
 
-        <div id='map'></div>
-        <div class="form-container">
-            <h1 class="h1">1 Km à pied</h1>
-            <form action="" id="formulaire" method="post">
-        
-                <div>
-                    <i class="fas fa-map-marker-alt"></i><input type="text" name="adresse" id="adresse">
-                </div>
-                
-                <div>
-                    <input type="submit" value="Calculer"onclick="geocode()">
-                </div>
-        
-            </form>
-            <nav class="choix">
-                <a href="carte-1km.html">A</a>
-                <a href="carte-1km-b.html">B</a>
-                <a href="carte-1km-c.html">C</a>
-                <a href="carte-1km-d.html">D</a>
-            </nav>
-            <ul id="instruction">
-            </ul>
-        </div>
-    </div>
+		<div id='map'></div>
+			<div class="form-container">
+			<h1 class="h1">1 Km à pied</h1>
+			<nav class="choix">
+				<a href="carte-1km.html">A</a>
+				<a href="carte-1km-b.html">B</a>
+				<a href="carte-1km-c.html">C</a>
+				<a href="carte-1km-d.html">D</a>
+			</nav>
+			<div id="dlConteneur">
+				<button type="button" id="btnPrint" class="telechargement"><a id="downloadLink" href="" download="map.png">Télécharger carte</a></button>
+				<button type="button" id="btnPrintInstruction" class="telechargement" onclick="itineraire()">Télécharger itinéraire</a></button>
+			</div>
+			<ul id="instruction">
+			</ul>
+		</div>
+	</div>
 </body>
 <script src="js/1km/map1km-b.js"></script>
+<script src="js/telechargement.js"></script>
 </html>
