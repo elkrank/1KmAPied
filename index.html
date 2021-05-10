@@ -7,17 +7,72 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Accueil</title>
 </head>
+<style>
+#indexImg{
+	position:absolute;
+	z-index:-1;
+	width:100%;
+	height: 95vh;
+}
+.geocode-container{
+	position:absolute;
+	top: 25%;
+	right : 40%;
+	z-index:1;
+}
+#adress{
+	width: 400px;
+	height:30px;
+}
+.index-wrapper{
+	background-image: url('guillaume-flandre-0YMcQKJXtc4-unsplash.jpg');
+	background-size:cover;
+	height:1000px;
+}
+.index-text{
+	position:absolute;
+	top:60%;
+	right:25%;
+	width:900px;
+	background :rgba(255,255,255, 0.8);
+	z-index:1;
+	font-size: 21px;
+	font-family:sans-serif;
+	padding:16px;
+
+}
+
+.km{
+	color : #314CCD;
+	font-weight: 900;
+}
+
+</style>
 <body>
     <nav>
         <a href="index.html">Accueil</a>
-        <a href="">à propos</a>
         <a href="carte-1km.html">1km</a>
         <a href="carte-2km.html">2km</a>
         <a href="carte-3km.html">3km</a>
         <a href="carte-4km.html">4km</a>
     </nav>
-    <input type="text" name="adress" id="adress">
-    <button onclick="geocode()">Valider</button>
+	<div class="index-wrapper">
+	<!--<img id="indexImg"src="guillaume-flandre-0YMcQKJXtc4-unsplash.jpg" alt="">-->
+		<div class='geocode-container'>
+		<input type="text" name="adress" id="adress" placeholder="Entrez l'adresse de votre point de départ...">
+		<button id="btngeo"onclick="geocode()">Valider</button>
+		</div>
+		<div>
+			
+			<p class="index-text"><span class="km">1km à pied</span> est un projet d'étudiants dans le cadre d'une unité d'enseignement.
+				Il nous a été inspiré par les restrictions de déplacement suite aux mesures sanitaires.
+				<br><br>
+				Ce site à pour fonction de trouver un chemin d'une distance souhaitée, partant d'un point et revenant au même point.
+				Le cercle d'un rayon d'1km est donné uniquement à titre indicatif car les consignes sanitaires évoluent.
+				<br><br>
+				1km à pied utilise les API Mapbox GL JS et GraphHopper.</p>
+		</div>
+	</div>
 </body>
 <script>
     
