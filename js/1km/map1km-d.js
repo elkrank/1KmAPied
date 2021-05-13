@@ -1,10 +1,12 @@
+//Récupérer coordonnées de l'adresse entrée par l'utilisateur
 var storageCoord = localStorage;
-
 var lon = Number(storageCoord.getItem('lon'));
 var lat = Number(storageCoord.getItem('lat'));
-// Add your Mapbox access token
+
+//Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxrcmFuayIsImEiOiJja2xtb2swcWMwMTlpMndxbWlqdWYyaTc1In0.yJEFoYcVbJ6C66joUDP4-g';
 
+//Fond de carte
 var map = new mapboxgl.Map({
   container: 'map', // Specify the container ID
   style: 'mapbox://styles/mapbox/streets-v11', // Specify which map style to use
@@ -12,7 +14,7 @@ var map = new mapboxgl.Map({
   zoom: 15, // Specify the starting zoom
   preserveDrawingBuffer: true
 });
-//marker de position
+//marqueur de position
 var marker = new mapboxgl.Marker({
   'color': '#314ccd'
 });
@@ -24,13 +26,11 @@ var lngLat = {
   lat: lat
 };
 
+//Tableau de coordonnées pour générer les instructions
 var tabCoordonnees = [];
 
-
 window.onload = function() {
-    //Pour bloquer les routes qui correspondent au périmètre du cercle
-    var tabCoordPoints = [];
-    var tabBlockArea = [];
+    //Affichage du cercle
     var myCircle;
     myCircle = new MapboxCircle({lat: lat, lng: lon}, 1000, {
             editable: true,
@@ -38,20 +38,12 @@ window.onload = function() {
             maxRadius:	1000,
             fillColor: '#29AB87'
         }).addTo(map);
-        //Récupérer les coordonnées des points du périmètre du cercle
-        tabCoordPoints=myCircle._circle.geometry.coordinates[0];
         
-        //Les mettre dans un tableau pour créer des block area
-        for(var i=0; i<tabCoordPoints.length; i++){
-            var longitude = tabCoordPoints[i][0];
-            var latitude = tabCoordPoints[i][1];
-            tabBlockArea.push([latitude, longitude]);
-        }
     map.on('load', function() {      
-        // Initialize the marker at the query coordinates
+        //Initialise le marqueur de position
         marker.setLngLat(lngLat).addTo(map);
       
-        //L'affichage de la route
+        //Affichage de la route
         map.addSource('route', {
             'type': 'geojson',
             'data': {
@@ -76,24 +68,10 @@ window.onload = function() {
                 'line-width': 5
             }
         });
-        
-        
     });
-    console.log(tabBlockArea);
-    var block_query =""
+    
+	//Calcul du chemin
     var profile = "foot";
-    
-        for(var i = 0; i< tabBlockArea.length;i++){
-            block_query +=tabBlockArea[i][0];
-            block_query += ","
-            block_query+= tabBlockArea[i][1],
-            block_query+=",";
-            block_query+="50";
-            block_query += ";"
-    
-    }
-    console.log("block_query "+block_query);
-
     var host;
     var ghRouting = new GraphHopper.Routing({
         
@@ -106,7 +84,8 @@ window.onload = function() {
             disable: true,
         }, 
         debug:true,
-        //block_area :block_query,
+        
+		//Calcul des points de passage
         point:[
             [lat+","+lon],
             [(lat-0.001)+","+(lon)],
@@ -116,42 +95,31 @@ window.onload = function() {
             [lat+","+lon]
             ]
         });
-  
-   
-    
     console.log("POINT :"+ghRouting.point);
 
-    console.log(ghRouting.block_area);
-    
-     // If you only need e.g. Routing, you can only require the needed parts
-     //var ghRouting = new GraphHopperRouting({key: defaultKey, host: host, vehicle: profile, elevation: false});
- 
-     // Setup your own Points
+    //Point de départ
     ghRouting.addPoint(new GHInput(lat, lon));
     
+	//Requête de routing
     ghRouting.doRequest()
     .then(function(json){
-        // Add your own result handling here
         
+		//Mettre les points de passage dans un tableau pour pouvoir créer les instructions
         for(var i=0; i<json.paths[0].points.coordinates.length; i++){
             tabCoordonnees.push(json.paths[0].points.coordinates[i]);
         }
         console.log(json);
     
-        for(var i=0; i<json.paths[0].instructions.length; i++){
-            
+		//Affichage des instructions d'itinéraire
+        for(var i=0; i<json.paths[0].instructions.length; i++){  
             var instruction = document.getElementById("instruction");
             var instruction_element = document.createElement('li');
-            //json.paths[0].points.instruction[i].text;
-            instruction_element.innerText =[i]+"--"+ json.paths[0].instructions[i].text;
+           
+		   instruction_element.innerText =[i]+"--"+ json.paths[0].instructions[i].text;
             instruction.appendChild(instruction_element);
-        
         }
     })
     .catch(function(err){
         console.error(err.message);
     });
-    
-    
-console.log(tabBlockArea[0][0]);
 }
